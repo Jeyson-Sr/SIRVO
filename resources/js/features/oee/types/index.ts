@@ -71,6 +71,42 @@ export type RankedStop = {
     porcentajeAcumulado: number;
 };
 
+export type StopCommentGroup = {
+    comentario: string;
+    fecha: string;
+    hora: string;
+    totalMinutos: number;
+    totalFrecuencia: number;
+};
+
+export type StopProductGroup = {
+    sku: string;
+    producto: string;
+    totalMinutos: number;
+    totalFrecuencia: number;
+};
+
+export type StopLineGroup = {
+    linea: string;
+    totalMinutos: number;
+    totalFrecuencia: number;
+};
+
+export type StopOccurrence = {
+    sku: string;
+    producto: string;
+    linea: string;
+    totalMinutos: number;
+    totalFrecuencia: number;
+};
+
+export type ExplainedStop = RankedStop & {
+    comentarios: StopCommentGroup[];
+    productos: StopProductGroup[];
+    lineas: StopLineGroup[];
+    ocurrencias: StopOccurrence[];
+};
+
 export type DashboardFilterOptions = {
     lineas: string[];
     marcas: string[];
@@ -161,8 +197,12 @@ export type SkuListItem = {
     formato: string | null;
     marca: string | null;
     sabor: string | null;
+    um: number;
     palletsPorHora: number;
     bph: number;
+    compania: string | null;
+    mercado: string | null;
+    paqPallet: number;
     activo: boolean;
 };
 
@@ -174,9 +214,25 @@ export type SkuFormValues = {
     formato: string;
     marca: string;
     sabor: string;
+    um: string;
     pallets_por_hora: string;
     bph: string;
+    compania: string;
+    mercado: string;
+    nivel: string;
+    paq_cama: string;
+    cartones: string;
+    paq_pallet: string;
     activo: boolean;
+};
+
+export type SkuBphChange = {
+    id: number;
+    linea: string;
+    bphAnterior: number | null;
+    bphNuevo: number;
+    userName: string | null;
+    createdAt: string;
 };
 
 export type SkuFilters = {

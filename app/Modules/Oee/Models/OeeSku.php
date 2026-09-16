@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * A finished good the plant can run, keyed by its SKU and the line that makes it.
@@ -21,8 +22,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $formato
  * @property string|null $marca
  * @property string|null $sabor
+ * @property int $um
  * @property string $pallets_por_hora
  * @property string $bph
+ * @property string|null $compania
+ * @property string|null $mercado
+ * @property int $nivel
+ * @property int $paq_cama
+ * @property int $cartones
+ * @property int $paq_pallet
  * @property bool $activo
  */
 #[UsePolicy(OeeSkuPolicy::class)]
@@ -33,8 +41,15 @@ use Illuminate\Database\Eloquent\Model;
     'formato',
     'marca',
     'sabor',
+    'um',
     'pallets_por_hora',
     'bph',
+    'compania',
+    'mercado',
+    'nivel',
+    'paq_cama',
+    'cartones',
+    'paq_pallet',
     'activo',
 ])]
 class OeeSku extends Model
@@ -99,6 +114,14 @@ class OeeSku extends Model
     }
 
     /**
+     * @return HasMany<OeeSkuBphChange, $this>
+     */
+    public function bphChanges(): HasMany
+    {
+        return $this->hasMany(OeeSkuBphChange::class, 'oee_sku_id')->latest('id');
+    }
+
+    /**
      * Determine whether any recorded shift already used this SKU.
      */
     public function isInUse(): bool
@@ -115,8 +138,13 @@ class OeeSku extends Model
     protected function casts(): array
     {
         return [
+            'um' => 'integer',
             'pallets_por_hora' => 'decimal:2',
             'bph' => 'decimal:2',
+            'nivel' => 'integer',
+            'paq_cama' => 'integer',
+            'cartones' => 'integer',
+            'paq_pallet' => 'integer',
             'activo' => 'boolean',
         ];
     }

@@ -13,10 +13,11 @@ test('dashboard is the only platform section', function () {
 });
 
 test('registered modules still appear among grantable plant sections', function () {
-    expect(AppSection::values())->toBe(['dashboard', 'oee', 'productions', 'catalog', 'skus'])
+    expect(AppSection::values())->toBe(['dashboard', 'oee', 'paradas', 'productions', 'catalog', 'skus'])
         ->and(AppSection::grantableValues())->toBe([
             'dashboard',
             'oee',
+            'paradas',
             'productions',
             'catalog',
             'skus',

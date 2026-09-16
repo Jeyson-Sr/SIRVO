@@ -14,6 +14,7 @@ test('login screen can be rendered', function () {
     $response = $this->get(route('login'));
 
     $response->assertOk();
+    $response->assertInertia(fn (Assert $page) => $page->component('auth/login'));
 });
 
 test('login screen includes team invitation context', function () {
@@ -47,6 +48,34 @@ test('users can authenticate using the login screen', function () {
 
     $this->assertAuthenticated();
     $response->assertRedirect(route('dashboard'));
+});
+
+test('authenticated users visiting login are sent to their team dashboard', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('login'))
+        ->assertRedirect(route('dashboard', $user->personalTeam()));
+});
+
+test('inertia login redirects stay on the forwarded https host', function () {
+    $user = User::factory()->create();
+
+    $response = $this
+        ->withHeaders([
+            'X-Forwarded-Proto' => 'https',
+            'X-Forwarded-Host' => 'sirvo.test',
+            'X-Inertia' => 'true',
+            'Accept' => 'text/html, application/xhtml+xml',
+        ])
+        ->post(route('login.store'), [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect();
+    expect($response->headers->get('Location'))->toStartWith('https://sirvo.test/');
 });
 
 test('passkey login response redirects to the current team dashboard', function () {

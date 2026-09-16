@@ -4,6 +4,7 @@ namespace App\Modules\Oee\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Team;
+use App\Modules\Oee\Actions\PersistSku;
 use App\Modules\Oee\Http\Requests\ListSkusRequest;
 use App\Modules\Oee\Http\Requests\StoreSkuRequest;
 use App\Modules\Oee\Http\Requests\UpdateSkuRequest;
@@ -53,11 +54,11 @@ class SkuAdminController extends Controller
     /**
      * Store a newly created catalog entry.
      */
-    public function store(StoreSkuRequest $request, Team $current_team): RedirectResponse
+    public function store(StoreSkuRequest $request, PersistSku $persistSku, Team $current_team): RedirectResponse
     {
         Gate::authorize('create', [OeeSku::class, $current_team]);
 
-        OeeSku::query()->create($request->validated());
+        $persistSku->handle($request->validated(), actor: $request->user());
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Producto creado.']);
 
@@ -73,6 +74,7 @@ class SkuAdminController extends Controller
 
         return Inertia::render('oee/admin/skus/edit', [
             'sku' => $presentSku->form($oeeSku),
+            'bphChanges' => $presentSku->bphChanges($oeeSku),
             'lines' => $this->lines(),
             'inUse' => $oeeSku->isInUse(),
         ]);
@@ -81,11 +83,11 @@ class SkuAdminController extends Controller
     /**
      * Update the specified catalog entry.
      */
-    public function update(UpdateSkuRequest $request, Team $current_team, OeeSku $oeeSku): RedirectResponse
+    public function update(UpdateSkuRequest $request, PersistSku $persistSku, Team $current_team, OeeSku $oeeSku): RedirectResponse
     {
         Gate::authorize('update', [$oeeSku, $current_team]);
 
-        $oeeSku->update($request->validated());
+        $persistSku->handle($request->validated(), $oeeSku, $request->user());
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Producto actualizado.']);
 

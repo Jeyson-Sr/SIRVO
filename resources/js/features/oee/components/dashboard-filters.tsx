@@ -16,6 +16,8 @@ type Props = {
     teamSlug: string;
     options: DashboardFilterOptions;
     applied: AppliedFilters;
+    action?: { action: string; method: string };
+    clearHref?: string;
 };
 
 type FilterSelectProps = {
@@ -56,12 +58,20 @@ function toOptions(values: string[]): SelectOption[] {
 /**
  * A plain GET form so any filtered view stays shareable and bookmarkable.
  */
-export function DashboardFilters({ teamSlug, options, applied }: Props) {
+export function DashboardFilters({
+    teamSlug,
+    options,
+    applied,
+    action,
+    clearHref,
+}: Props) {
+    const form = action ?? dashboard.form(teamSlug);
+
     return (
         <Card>
             <CardContent>
                 <Form
-                    {...dashboard.form(teamSlug)}
+                    {...form}
                     options={{ preserveScroll: true }}
                     className="grid gap-4 md:grid-cols-2 lg:grid-cols-6"
                 >
@@ -129,7 +139,7 @@ export function DashboardFilters({ teamSlug, options, applied }: Props) {
                                 </Button>
 
                                 <Button type="button" variant="ghost" asChild>
-                                    <Link href={dashboard(teamSlug)}>
+                                    <Link href={clearHref ?? dashboard(teamSlug)}>
                                         <RotateCcw />
                                         Limpiar
                                     </Link>

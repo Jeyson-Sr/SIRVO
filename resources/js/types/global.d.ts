@@ -12,6 +12,7 @@ declare module '@inertiajs/core' {
     export interface InertiaConfig {
         sharedPageProps: {
             name: string;
+            allowedEmailDomain: string;
             auth: Auth;
             sidebarOpen: boolean;
             currentTeam: Team | null;

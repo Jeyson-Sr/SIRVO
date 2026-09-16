@@ -21,15 +21,22 @@ class StoreSkuRequest extends FormRequest
                 'required',
                 'string',
                 'max:32',
-                Rule::unique('oee_skus', 'sku')->ignore($this->catalogEntry()),
+                Rule::unique('oee_skus', 'sku')
+                    ->where(fn ($query) => $query->where('linea', $this->input('linea')))
+                    ->ignore($this->catalogEntry()),
             ],
             'linea' => ['required', 'string', Rule::in($this->lines())],
             'descripcion' => ['required', 'string', 'max:255'],
             'formato' => ['nullable', 'string', 'max:32'],
             'marca' => ['nullable', 'string', 'max:64'],
             'sabor' => ['nullable', 'string', 'max:64'],
-            'pallets_por_hora' => ['required', 'numeric', 'min:0', 'max:99999999'],
+            'um' => ['required', 'integer', 'min:1', 'max:1000'],
             'bph' => ['required', 'numeric', 'min:0', 'max:9999999999'],
+            'compania' => ['nullable', 'string', 'max:64'],
+            'mercado' => ['nullable', 'string', 'max:64'],
+            'nivel' => ['required', 'integer', 'min:1', 'max:100'],
+            'paq_cama' => ['required', 'integer', 'min:1', 'max:1000'],
+            'cartones' => ['required', 'integer', 'min:0', 'max:1000'],
             'activo' => ['required', 'boolean'],
         ];
     }
@@ -44,8 +51,13 @@ class StoreSkuRequest extends FormRequest
             'linea' => 'línea',
             'descripcion' => 'descripción',
             'formato' => 'contenido',
-            'pallets_por_hora' => 'PH',
+            'um' => 'U.M',
             'bph' => 'BPH',
+            'compania' => 'compañía',
+            'mercado' => 'mercado',
+            'nivel' => 'nivel',
+            'paq_cama' => 'paq. cama',
+            'cartones' => 'cartones',
             'activo' => 'activo',
         ];
     }
@@ -71,6 +83,8 @@ class StoreSkuRequest extends FormRequest
             'formato' => $this->filled('formato') ? trim((string) $this->input('formato')) : null,
             'marca' => $this->filled('marca') ? trim((string) $this->input('marca')) : null,
             'sabor' => $this->filled('sabor') ? trim((string) $this->input('sabor')) : null,
+            'compania' => $this->filled('compania') ? trim((string) $this->input('compania')) : null,
+            'mercado' => $this->filled('mercado') ? trim((string) $this->input('mercado')) : null,
             'activo' => $this->boolean('activo', true),
         ]);
     }

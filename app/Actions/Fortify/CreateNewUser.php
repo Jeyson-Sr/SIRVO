@@ -7,6 +7,7 @@ use App\Actions\Teams\JoinPlantTeam;
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
 use App\Models\User;
+use App\Rules\AllowedEmailDomain;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
@@ -31,7 +32,14 @@ class CreateNewUser implements CreatesNewUsers
     {
         Validator::make($input, [
             ...$this->profileRules(),
+            'email' => [...$this->emailRules(), new AllowedEmailDomain],
             'password' => $this->passwordRules(),
+        ], [
+            'email.unique' => 'Este correo ya está registrado.',
+        ], [
+            'name' => 'nombre',
+            'email' => 'correo',
+            'password' => 'contraseña',
         ])->validate();
 
         return DB::transaction(function () use ($input) {

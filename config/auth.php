@@ -114,4 +114,15 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Allowed Registration Email Domain
+    |--------------------------------------------------------------------------
+    |
+    | Public registration only accepts addresses from this company domain.
+    |
+    */
+
+    'allowed_email_domain' => env('ALLOWED_EMAIL_DOMAIN', 'ecaral.pe'),
+
 ];

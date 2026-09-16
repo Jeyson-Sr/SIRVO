@@ -29,7 +29,7 @@ test('an admin can open the users access panel', function () {
         ->assertOk()
         ->assertInertia(fn (AssertableInertia $page) => $page
             ->component('oee/admin/users/index')
-            ->has('sections', 5)
+            ->has('sections', 6)
             ->has('roles', 3)
             ->has('users', 3));
 });
@@ -40,7 +40,7 @@ test('an admin can open the create user form', function () {
         ->assertOk()
         ->assertInertia(fn (AssertableInertia $page) => $page
             ->component('oee/admin/users/create')
-            ->has('sections', 5)
+            ->has('sections', 6)
             ->missing('roles'));
 });
 
@@ -172,6 +172,12 @@ test('an admin can grant section access to an existing user', function () {
             AppSection::Dashboard->value,
         ])
         ->and($this->outsider->fresh()->current_team_id)->toBe($this->team->id);
+});
+
+test('an operator without the paradas section cannot open stop comments', function () {
+    $this->actingAs($this->operator)
+        ->get(route('oee.paradas', $this->team))
+        ->assertForbidden();
 });
 
 test('an operator without the turnos section cannot open recorded shifts', function () {
@@ -334,6 +340,24 @@ test('an operator without the turnos section cannot edit or delete a shift', fun
             'production' => $production->id,
         ]))
         ->assertForbidden();
+});
+
+test('an admin can grant paradas view to an operator', function () {
+    $this->actingAs($this->admin)
+        ->put(route('oee.admin.users.update', [
+            'current_team' => $this->team->slug,
+            'user' => $this->operator->id,
+        ]), [
+            'sections' => [
+                OeeSection::Oee->value,
+                OeeSection::Paradas->value,
+            ],
+        ])
+        ->assertRedirect(route('oee.admin.users.index', $this->team));
+
+    $this->actingAs($this->operator)
+        ->get(route('oee.paradas', $this->team))
+        ->assertOk();
 });
 
 test('an admin can grant turnos and stop-code view to an operator', function () {

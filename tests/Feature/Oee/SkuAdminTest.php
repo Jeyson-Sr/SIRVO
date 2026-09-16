@@ -48,7 +48,7 @@ test('an owner can open the product catalog', function () {
         ->assertOk()
         ->assertInertia(fn (AssertableInertia $page) => $page
             ->component('oee/admin/skus/index')
-            ->has('lines', 4)
+            ->has('lines', 14)
             ->has('skus.data', 1)
             ->where('skus.data.0.sku', '408462')
             ->where('skus.data.0.linea', 'LINEA 1')
@@ -120,8 +120,13 @@ test('an admin can create a product for a line', function () {
             'formato' => '0.625',
             'marca' => 'CIELO',
             'sabor' => 'AGUA',
-            'pallets_por_hora' => '28.6',
+            'um' => '15',
             'bph' => '60000',
+            'compania' => 'AJE CARAL',
+            'mercado' => 'PERU',
+            'nivel' => '7',
+            'paq_cama' => '20',
+            'cartones' => '7',
             'activo' => '1',
         ])
         ->assertRedirect(skuAdminRoute('oee.admin.skus.index', $this->team));
@@ -131,7 +136,9 @@ test('an admin can create a product for a line', function () {
     expect($sku)->not->toBeNull()
         ->and($sku->linea)->toBe('LINEA 1')
         ->and($sku->descripcion)->toBe('CIELO AGUA 625 ml')
-        ->and((float) $sku->pallets_por_hora)->toBe(28.6)
+        ->and((int) $sku->um)->toBe(15)
+        ->and((int) $sku->paq_pallet)->toBe(140)
+        ->and((float) $sku->pallets_por_hora)->toBe(28.57)
         ->and((float) $sku->bph)->toBe(60000.0)
         ->and($sku->formato)->toBe('0.625')
         ->and($sku->activo)->toBeTrue();
@@ -144,8 +151,11 @@ test('an operator cannot create a product', function () {
             'linea' => 'LINEA 1',
             'descripcion' => 'No debería crearse',
             'formato' => '0.5',
-            'pallets_por_hora' => '10',
+            'um' => '12',
             'bph' => '10000',
+            'nivel' => '6',
+            'paq_cama' => '16',
+            'cartones' => '6',
             'activo' => '1',
         ])
         ->assertForbidden();
@@ -170,8 +180,13 @@ test('an admin can change ph bph content and line', function () {
             'formato' => '0.5',
             'marca' => 'CIELO',
             'sabor' => 'AGUA',
-            'pallets_por_hora' => '30',
+            'um' => '15',
             'bph' => '62000',
+            'compania' => 'AJE CARAL',
+            'mercado' => 'PERU',
+            'nivel' => '7',
+            'paq_cama' => '20',
+            'cartones' => '7',
             'activo' => '1',
         ])
         ->assertRedirect(skuAdminRoute('oee.admin.skus.index', $this->team));
@@ -180,7 +195,8 @@ test('an admin can change ph bph content and line', function () {
 
     expect($sku->linea)->toBe('LINEA 2')
         ->and($sku->formato)->toBe('0.5')
-        ->and((float) $sku->pallets_por_hora)->toBe(30.0)
+        ->and((int) $sku->paq_pallet)->toBe(140)
+        ->and((float) $sku->pallets_por_hora)->toBe(29.52)
         ->and((float) $sku->bph)->toBe(62000.0);
 });
 
@@ -207,8 +223,8 @@ test('a product already used on a shift cannot be deleted', function () {
     expect(OeeSku::query()->whereKey($sku->id)->exists())->toBeTrue();
 });
 
-test('creating a product requires a unique sku a line and calculation values', function () {
-    OeeSku::factory()->create(['sku' => 'DUP001']);
+test('creating a product requires a unique sku on that line and calculation values', function () {
+    OeeSku::factory()->create(['sku' => 'DUP001', 'linea' => 'LINEA 1']);
 
     $this->actingAs($this->admin)
         ->from(skuAdminRoute('oee.admin.skus.create', $this->team))
@@ -216,10 +232,29 @@ test('creating a product requires a unique sku a line and calculation values', f
             'sku' => 'DUP001',
             'linea' => 'NOPE',
             'descripcion' => '',
-            'pallets_por_hora' => '',
+            'um' => '',
             'bph' => '',
+            'nivel' => '',
+            'paq_cama' => '',
+            'cartones' => '',
             'activo' => '1',
         ])
         ->assertRedirect(skuAdminRoute('oee.admin.skus.create', $this->team))
-        ->assertSessionHasErrors(['sku', 'linea', 'descripcion', 'pallets_por_hora', 'bph']);
+        ->assertSessionHasErrors(['linea', 'descripcion', 'um', 'bph', 'nivel', 'paq_cama', 'cartones']);
+
+    $this->actingAs($this->admin)
+        ->from(skuAdminRoute('oee.admin.skus.create', $this->team))
+        ->post(skuAdminRoute('oee.admin.skus.store', $this->team), [
+            'sku' => 'DUP001',
+            'linea' => 'LINEA 1',
+            'descripcion' => 'Duplicado',
+            'um' => '15',
+            'bph' => '60000',
+            'nivel' => '7',
+            'paq_cama' => '20',
+            'cartones' => '7',
+            'activo' => '1',
+        ])
+        ->assertRedirect(skuAdminRoute('oee.admin.skus.create', $this->team))
+        ->assertSessionHasErrors('sku');
 });

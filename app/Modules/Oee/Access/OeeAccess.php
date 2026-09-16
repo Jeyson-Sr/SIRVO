@@ -19,6 +19,18 @@ class OeeAccess
     }
 
     /**
+     * Determine whether the user may open the stop-comment report.
+     */
+    public static function viewParadas(User $user, Team $team): bool
+    {
+        return ! $team->is_personal
+            && (
+                ($user->teamRole($team)?->managesPlant() ?? false)
+                || $user->hasSection($team, OeeSection::Paradas)
+            );
+    }
+
+    /**
      * Determine whether the user may open recorded shifts.
      */
     public static function viewProductions(User $user, Team $team): bool
@@ -63,6 +75,14 @@ class OeeAccess
     }
 
     /**
+     * Deny access unless the user may open the stop-comment report.
+     */
+    public static function ensureParadas(?User $user, Team $team): void
+    {
+        abort_unless($user !== null && self::viewParadas($user, $team), 403);
+    }
+
+    /**
      * Deny access unless the user may open recorded shifts.
      */
     public static function ensureProductions(?User $user, Team $team): void
@@ -79,6 +99,7 @@ class OeeAccess
      *     canDeleteProduction: bool,
      *     canManageCatalog: bool,
      *     canViewOee: bool,
+     *     canViewParadas: bool,
      *     canViewProductions: bool,
      *     canViewCatalog: bool,
      *     canViewSkus: bool
@@ -88,6 +109,7 @@ class OeeAccess
     {
         $role = $user->teamRole($team);
         $managesPlant = ! $team->is_personal && ($role?->managesPlant() ?? false);
+        $canViewParadas = self::viewParadas($user, $team);
         $canViewProductions = self::viewProductions($user, $team);
         $canViewCatalog = self::viewCatalog($user, $team);
         $canViewSkus = self::viewSkus($user, $team);
@@ -102,6 +124,7 @@ class OeeAccess
             'canManageCatalog' => $managesPlant
                 && ($role?->hasPermission(TeamPermission::ManageCatalog) ?? false),
             'canViewOee' => self::viewPanel($user, $team),
+            'canViewParadas' => $canViewParadas,
             'canViewProductions' => $canViewProductions,
             'canViewCatalog' => $canViewCatalog,
             'canViewSkus' => $canViewSkus,
@@ -115,6 +138,10 @@ class OeeAccess
     {
         if ($user->hasSection($team, OeeSection::Oee)) {
             return to_route('oee.dashboard', $team);
+        }
+
+        if ($user->hasSection($team, OeeSection::Paradas)) {
+            return to_route('oee.paradas', $team);
         }
 
         if ($user->hasSection($team, OeeSection::Productions)) {

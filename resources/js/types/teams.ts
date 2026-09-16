@@ -56,6 +56,7 @@ export type TeamPermissions = {
     canManageUsers: boolean;
     canViewDashboard: boolean;
     canViewOee: boolean;
+    canViewParadas: boolean;
     canViewProductions: boolean;
     canViewCatalog: boolean;
     canViewSkus: boolean;
@@ -67,7 +68,12 @@ export type RoleOption = {
 };
 
 export type AppSectionValue =
-    'dashboard' | 'oee' | 'productions' | 'catalog' | 'skus';
+    | 'dashboard'
+    | 'oee'
+    | 'paradas'
+    | 'productions'
+    | 'catalog'
+    | 'skus';
 
 export type TeamAccessUser = {
     id: number;

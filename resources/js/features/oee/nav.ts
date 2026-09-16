@@ -1,5 +1,5 @@
-import { ClipboardList, Gauge, Package, Tags } from 'lucide-react';
-import { dashboard as oeeDashboard } from '@/routes/oee';
+import { ClipboardList, Gauge, MessageSquareText, Package, Tags } from 'lucide-react';
+import { dashboard as oeeDashboard, paradas } from '@/routes/oee';
 import { index as skusIndex } from '@/routes/oee/admin/skus';
 import { index as stopCodesIndex } from '@/routes/oee/admin/stop-codes';
 import { index as productionsIndex } from '@/routes/oee/productions';
@@ -17,6 +17,15 @@ export function oeeNavItems(
                       title: 'Panel OEE',
                       href: oeeDashboard(teamSlug),
                       icon: Gauge,
+                  },
+              ]
+            : []),
+        ...(permissions?.canViewParadas
+            ? [
+                  {
+                      title: 'Paradas',
+                      href: paradas(teamSlug),
+                      icon: MessageSquareText,
                   },
               ]
             : []),

@@ -18,7 +18,19 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(at: '*');
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
+
+        $middleware->redirectUsersTo(function (Request $request): string {
+            $user = $request->user();
+            $team = $user?->currentTeam ?? $user?->personalTeam();
+
+            if ($team === null) {
+                return route('login');
+            }
+
+            return route('dashboard', $team);
+        });
 
         $middleware->web(append: [
             HandleAppearance::class,

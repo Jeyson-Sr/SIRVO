@@ -150,6 +150,21 @@ test('users without dashboard access are sent to the oee panel when they may ope
         ->assertRedirect(route('oee.dashboard', $team));
 });
 
+test('users without dashboard access are sent to paradas when that is their first section', function () {
+    $user = User::factory()->create();
+    $team = Team::factory()->create();
+
+    $team->members()->attach($user, [
+        'role' => TeamRole::Member->value,
+        'sections' => [OeeSection::Paradas->value],
+    ]);
+    $user->switchTeam($team);
+
+    $this->actingAs($user)
+        ->get(route('dashboard', $team))
+        ->assertRedirect(route('oee.paradas', $team));
+});
+
 test('users without dashboard access are sent to turnos when that is their first section', function () {
     $user = User::factory()->create();
     $team = Team::factory()->create();

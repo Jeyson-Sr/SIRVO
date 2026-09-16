@@ -20,12 +20,12 @@ export default function SkusCreate({ lines }: Props) {
                 <Heading
                     variant="small"
                     title="Nuevo producto"
-                    description="Indica la línea, el PH, el BPH y el contenido en litros"
+                    description="Indica la línea, el BPH y el empaque. El PH y el paq. pallet se calculan solos."
                 />
 
                 <Form
                     {...skus.store.form(teamSlug)}
-                    className="max-w-2xl space-y-6 rounded-xl border bg-card p-6 shadow-surface"
+                    className="max-w-3xl space-y-6 rounded-xl border bg-card p-6 shadow-surface"
                 >
                     {({ errors, processing }) => (
                         <>

@@ -40,6 +40,7 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'name' => config('app.name'),
+            'allowedEmailDomain' => (string) config('auth.allowed_email_domain'),
             'auth' => [
                 'user' => $user,
             ],

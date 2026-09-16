@@ -5,6 +5,7 @@ namespace App\Modules\Oee\Enums;
 enum OeeSection: string
 {
     case Oee = 'oee';
+    case Paradas = 'paradas';
     case Productions = 'productions';
     case Catalog = 'catalog';
     case Skus = 'skus';
@@ -16,6 +17,7 @@ enum OeeSection: string
     {
         return match ($this) {
             self::Oee => 'Panel OEE',
+            self::Paradas => 'Paradas',
             self::Productions => 'Turnos',
             self::Catalog => 'Códigos de parada',
             self::Skus => 'Productos',

@@ -8,6 +8,7 @@ use App\Modules\Oee\Http\Controllers\SkuAdminController;
 use App\Modules\Oee\Http\Controllers\SkuController;
 use App\Modules\Oee\Http\Controllers\StopCodeAdminController;
 use App\Modules\Oee\Http\Controllers\StopCodeController;
+use App\Modules\Oee\Http\Controllers\StopCommentController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('{current_team}')
@@ -15,6 +16,7 @@ Route::prefix('{current_team}')
     ->name('oee.')
     ->group(function () {
         Route::get('oee', OeeDashboardController::class)->name('dashboard');
+        Route::get('oee/paradas', StopCommentController::class)->name('paradas');
 
         // Scoped so a production can only be reached through the team that owns it.
         Route::prefix('production')->name('productions.')->scopeBindings()->group(function () {

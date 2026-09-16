@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { NativeSelect } from '@/components/ui/native-select';
 import type { SkuFilters, SkuListItem } from '@/features/oee/types';
-import { formatNumber } from '@/features/oee/utils';
+import { formatNumber, formatQuantity } from '@/features/oee/utils';
 import { dashboard } from '@/routes/oee';
 import * as skus from '@/routes/oee/admin/skus';
 import type { Paginated } from '@/types';
@@ -34,7 +34,7 @@ export default function SkusIndex({ skus: catalog, lines, filters }: Props) {
                     <Heading
                         variant="small"
                         title="Productos"
-                        description="PH, BPH y contenido usados en el cálculo de OEE y volumen, por línea"
+                        description="BPH por línea, PH calculado y empaque usados en OEE y volumen"
                     />
 
                     {canManage && (
@@ -123,10 +123,12 @@ export default function SkusIndex({ skus: catalog, lines, filters }: Props) {
                                 </div>
 
                                 <p className="text-sm text-muted-foreground">
-                                    PH {formatNumber(sku.palletsPorHora)}
+                                    PH {formatQuantity(sku.palletsPorHora)}
                                     {' · '}
                                     {formatNumber(sku.bph)} BPH
+                                    {sku.um ? ` · U.M ${sku.um}` : ''}
                                     {sku.formato ? ` · ${sku.formato} L` : ''}
+                                    {sku.mercado ? ` · ${sku.mercado}` : ''}
                                 </p>
                             </>
                         );

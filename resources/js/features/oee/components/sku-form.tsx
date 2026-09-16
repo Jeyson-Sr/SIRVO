@@ -1,8 +1,14 @@
+import { useState } from 'react';
 import InputError from '@/components/input-error';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { NativeSelect } from '@/components/ui/native-select';
 import type { SkuFormValues } from '@/features/oee/types';
+import {
+    parseSkuNumber,
+    skuPaqPallet,
+    skuPalletsPerHour,
+} from '@/features/oee/utils';
 
 type Props = {
     lines: string[];
@@ -18,13 +24,31 @@ const EMPTY: SkuFormValues = {
     formato: '',
     marca: '',
     sabor: '',
+    um: '',
     pallets_por_hora: '',
     bph: '',
+    compania: '',
+    mercado: '',
+    nivel: '',
+    paq_cama: '',
+    cartones: '',
+    paq_pallet: '',
     activo: true,
 };
 
 export function SkuForm({ lines, values, errors }: Props) {
     const defaults = { ...EMPTY, ...values };
+    const [um, setUm] = useState(defaults.um);
+    const [bph, setBph] = useState(defaults.bph);
+    const [nivel, setNivel] = useState(defaults.nivel);
+    const [paqCama, setPaqCama] = useState(defaults.paq_cama);
+
+    const paqPallet = skuPaqPallet(parseSkuNumber(paqCama), parseSkuNumber(nivel));
+    const palletsPerHour = skuPalletsPerHour(
+        parseSkuNumber(bph),
+        parseSkuNumber(um),
+        paqPallet,
+    );
 
     return (
         <div className="grid gap-4">
@@ -96,7 +120,31 @@ export function SkuForm({ lines, values, errors }: Props) {
                 </div>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-2">
+                    <Label htmlFor="compania">Compañía</Label>
+                    <Input
+                        id="compania"
+                        name="compania"
+                        defaultValue={defaults.compania}
+                        maxLength={64}
+                    />
+                    <InputError message={errors.compania} />
+                </div>
+
+                <div className="grid gap-2">
+                    <Label htmlFor="mercado">Mercado</Label>
+                    <Input
+                        id="mercado"
+                        name="mercado"
+                        defaultValue={defaults.mercado}
+                        maxLength={64}
+                    />
+                    <InputError message={errors.mercado} />
+                </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
                 <div className="grid gap-2">
                     <Label htmlFor="formato">Contenido (L)</Label>
                     <Input
@@ -111,19 +159,68 @@ export function SkuForm({ lines, values, errors }: Props) {
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="pallets_por_hora">PH</Label>
+                    <Label htmlFor="um">U.M</Label>
                     <Input
-                        id="pallets_por_hora"
-                        name="pallets_por_hora"
+                        id="um"
+                        name="um"
                         type="number"
-                        step="0.01"
-                        min="0"
-                        defaultValue={defaults.pallets_por_hora}
+                        step="1"
+                        min="1"
+                        value={um}
+                        onChange={(event) => setUm(event.target.value)}
                         required
                     />
-                    <InputError message={errors.pallets_por_hora} />
+                    <InputError message={errors.um} />
+                </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-3">
+                <div className="grid gap-2">
+                    <Label htmlFor="nivel">Nivel</Label>
+                    <Input
+                        id="nivel"
+                        name="nivel"
+                        type="number"
+                        step="1"
+                        min="1"
+                        value={nivel}
+                        onChange={(event) => setNivel(event.target.value)}
+                        required
+                    />
+                    <InputError message={errors.nivel} />
                 </div>
 
+                <div className="grid gap-2">
+                    <Label htmlFor="paq_cama">Paq. cama</Label>
+                    <Input
+                        id="paq_cama"
+                        name="paq_cama"
+                        type="number"
+                        step="1"
+                        min="1"
+                        value={paqCama}
+                        onChange={(event) => setPaqCama(event.target.value)}
+                        required
+                    />
+                    <InputError message={errors.paq_cama} />
+                </div>
+
+                <div className="grid gap-2">
+                    <Label htmlFor="cartones">Cartones</Label>
+                    <Input
+                        id="cartones"
+                        name="cartones"
+                        type="number"
+                        step="1"
+                        min="0"
+                        defaultValue={defaults.cartones}
+                        required
+                    />
+                    <InputError message={errors.cartones} />
+                </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-3">
                 <div className="grid gap-2">
                     <Label htmlFor="bph">BPH</Label>
                     <Input
@@ -132,10 +229,39 @@ export function SkuForm({ lines, values, errors }: Props) {
                         type="number"
                         step="0.01"
                         min="0"
-                        defaultValue={defaults.bph}
+                        value={bph}
+                        onChange={(event) => setBph(event.target.value)}
                         required
                     />
                     <InputError message={errors.bph} />
+                </div>
+
+                <div className="grid gap-2">
+                    <Label htmlFor="paq_pallet">Paq. pallet</Label>
+                    <Input
+                        id="paq_pallet"
+                        value={paqPallet || ''}
+                        readOnly
+                        tabIndex={-1}
+                        className="bg-muted"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                        Paq. cama × nivel
+                    </p>
+                </div>
+
+                <div className="grid gap-2">
+                    <Label htmlFor="pallets_por_hora">PH × hora</Label>
+                    <Input
+                        id="pallets_por_hora"
+                        value={palletsPerHour || ''}
+                        readOnly
+                        tabIndex={-1}
+                        className="bg-muted"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                        (BPH / U.M) / paq. pallet
+                    </p>
                 </div>
             </div>
 

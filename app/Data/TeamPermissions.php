@@ -19,6 +19,7 @@ readonly class TeamPermissions
         public bool $canManageUsers,
         public bool $canViewDashboard,
         public bool $canViewOee,
+        public bool $canViewParadas,
         public bool $canViewProductions,
         public bool $canViewCatalog,
         public bool $canViewSkus,

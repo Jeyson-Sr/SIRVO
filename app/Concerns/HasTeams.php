@@ -188,6 +188,7 @@ trait HasTeams
                 && ($role?->hasPermission(TeamPermission::ManageUsers) ?? false),
             canViewDashboard: $this->hasSection($team, AppSection::Dashboard),
             canViewOee: $module['canViewOee'] ?? false,
+            canViewParadas: $module['canViewParadas'] ?? false,
             canViewProductions: $module['canViewProductions'] ?? false,
             canViewCatalog: $module['canViewCatalog'] ?? false,
             canViewSkus: $module['canViewSkus'] ?? false,
