@@ -4,6 +4,7 @@ use App\Enums\TeamRole;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Models\Team;
 use App\Models\User;
+use App\Modules\Oee\Enums\StopType;
 use App\Modules\Oee\Models\CodStop;
 use App\Modules\Oee\Models\OeeHourDetail;
 use App\Modules\Oee\Models\OeeProduction;
@@ -220,6 +221,47 @@ test('the stop code catalog can be searched by code or wording', function () {
         ->getJson(oeeRoute('oee.stop-codes.index', $this->team, ['search' => 'llenadora']));
 
     $byWording->assertOk()->assertJsonPath('data.0.codigo', 'EQ07');
+});
+
+test('the stop code catalog can be filtered by loss family', function () {
+    CodStop::factory()->ofType(StopType::Equipment)->create([
+        'codigo' => 'EQ07',
+        'detalle' => 'Falla de llenadora',
+    ]);
+    CodStop::factory()->ofType(StopType::Quality)->create([
+        'codigo' => 'QD03',
+        'detalle' => 'Botella deformada',
+    ]);
+
+    $response = $this->actingAs($this->owner)
+        ->getJson(oeeRoute('oee.stop-codes.index', $this->team, ['tipo' => 'EQ']));
+
+    $response->assertOk()->assertJsonCount(1, 'data')->assertJsonPath('data.0.codigo', 'EQ07');
+});
+
+test('searching stop codes stays inside the chosen loss family', function () {
+    CodStop::factory()->ofType(StopType::Equipment)->create([
+        'codigo' => 'A1',
+        'detalle' => 'Calibración del aplicador',
+    ]);
+    CodStop::factory()->ofType(StopType::Operational)->create([
+        'codigo' => 'B1',
+        'detalle' => 'Calibración de sinfin',
+    ]);
+
+    $response = $this->actingAs($this->owner)
+        ->getJson(oeeRoute('oee.stop-codes.index', $this->team, [
+            'search' => 'Calibración',
+            'tipo' => 'EQ',
+        ]));
+
+    $response->assertOk()->assertJsonCount(1, 'data')->assertJsonPath('data.0.codigo', 'A1');
+});
+
+test('an unknown loss family is rejected when searching stop codes', function () {
+    $this->actingAs($this->owner)
+        ->getJson(oeeRoute('oee.stop-codes.index', $this->team, ['tipo' => 'NOPE']))
+        ->assertUnprocessable();
 });
 
 test('retired stop codes are not offered for selection', function () {

@@ -5,6 +5,7 @@ namespace App\Modules\Oee\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Team;
 use App\Modules\Oee\Access\OeeAccess;
+use App\Modules\Oee\Enums\StopType;
 use App\Modules\Oee\Http\Requests\CatalogSearchRequest;
 use App\Modules\Oee\Queries\SearchStopCodes;
 use Illuminate\Http\JsonResponse;
@@ -21,8 +22,10 @@ class StopCodeController extends Controller
     {
         OeeAccess::ensureProductions($request->user(), $current_team);
 
+        $tipo = StopType::tryFrom((string) ($request->validated('tipo') ?? ''));
+
         return response()->json([
-            'data' => $searchStopCodes->handle($request->validated('search')),
+            'data' => $searchStopCodes->handle($request->validated('search'), $tipo),
         ]);
     }
 }

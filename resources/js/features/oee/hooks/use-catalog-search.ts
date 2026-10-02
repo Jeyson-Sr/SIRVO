@@ -23,12 +23,16 @@ export function useCatalogSearch<T>({
 
     useEffect(() => {
         if (!enabled) {
+            setResults([]);
+            setSearching(false);
+
             return;
         }
 
+        setSearching(true);
+
         const timer = window.setTimeout(async () => {
             const currentRequest = ++requestId.current;
-            setSearching(true);
 
             try {
                 const response = await fetch(url, {
