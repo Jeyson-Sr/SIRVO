@@ -55,6 +55,7 @@ export type WeeklyPoint = {
 export type OeeReport = {
     summary: OeeSummary;
     volumen: number;
+    parihuelas: number;
     byLine: LinePerformance[];
     byDay: DailyPoint[];
     byWeek: WeeklyPoint[];

@@ -7,6 +7,7 @@ use App\Enums\AppSection;
 use App\Models\Team;
 use App\Models\TeamInvitation;
 use App\Models\User;
+use App\Modules\Oee\Access\OeeAccess;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,6 +18,10 @@ class DashboardController extends Controller
     public function __invoke(Request $request, Team $current_team): Response|RedirectResponse
     {
         $user = $request->user();
+
+        if (OeeAccess::viewPanel($user, $current_team)) {
+            return to_route('oee.dashboard', $current_team);
+        }
 
         if (! $user->hasSection($current_team, AppSection::Dashboard)) {
             return $this->redirectToFirstSection($user, $current_team);

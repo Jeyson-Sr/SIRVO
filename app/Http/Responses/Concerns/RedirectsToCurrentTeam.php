@@ -3,6 +3,7 @@
 namespace App\Http\Responses\Concerns;
 
 use App\Models\Team;
+use App\Modules\Oee\Access\OeeAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
@@ -13,8 +14,13 @@ trait RedirectsToCurrentTeam
     protected function redirectPathForCurrentTeam(Request $request, string $redirect): string
     {
         $team = $this->currentTeam($request);
+        $user = $request->user();
 
         URL::defaults(['current_team' => $team->slug]);
+
+        if ($user !== null && OeeAccess::viewPanel($user, $team)) {
+            return route('oee.dashboard', $team, absolute: false);
+        }
 
         return "/{$team->slug}{$redirect}";
     }

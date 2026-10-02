@@ -27,7 +27,7 @@ export function SummarySkeleton() {
         <div className="grid gap-4 lg:grid-cols-4" aria-hidden>
             <div className="h-44 animate-pulse rounded-xl bg-muted lg:col-span-2" />
             <div className="grid gap-4 sm:grid-cols-2 lg:col-span-2">
-                {Array.from({ length: 4 }).map((_, index) => (
+                {Array.from({ length: 2 }).map((_, index) => (
                     <div
                         key={index}
                         className="h-20 animate-pulse rounded-xl bg-muted"

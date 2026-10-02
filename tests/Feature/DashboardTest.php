@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\AppSection;
 use App\Enums\TeamRole;
 use App\Models\Team;
 use App\Models\TeamInvitation;
@@ -133,6 +134,21 @@ test('dashboard does not include or delete other users invitations', function ()
     $this->assertDatabaseHas('team_invitations', [
         'id' => $invitation->id,
     ]);
+});
+
+test('plant members who can open the oee panel are sent there instead of the home dashboard', function () {
+    $user = User::factory()->create();
+    $team = Team::factory()->create();
+
+    $team->members()->attach($user, [
+        'role' => TeamRole::Owner->value,
+        'sections' => [AppSection::Dashboard->value, OeeSection::Oee->value],
+    ]);
+    $user->switchTeam($team);
+
+    $this->actingAs($user)
+        ->get(route('dashboard', $team))
+        ->assertRedirect(route('oee.dashboard', $team));
 });
 
 test('users without dashboard access are sent to the oee panel when they may open it', function () {

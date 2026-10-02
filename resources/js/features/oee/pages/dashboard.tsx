@@ -27,10 +27,10 @@ import type {
     RankedStop,
 } from '@/features/oee/types';
 import {
-    formatDuration,
     formatMinutes,
     formatNumber,
     formatPercentage,
+    formatQuantity,
     lossColor,
 } from '@/features/oee/utils';
 import { dashboard } from '@/routes/oee';
@@ -53,8 +53,6 @@ const EMPTY_OPTIONS: DashboardFilterOptions = {
 
 function ReportSections({ report }: { report: OeeReport }) {
     const { summary } = report;
-
-    const lostMinutes = summary.effectiveMinutes - summary.productiveMinutes;
 
     return (
         <>
@@ -81,20 +79,9 @@ function ReportSections({ report }: { report: OeeReport }) {
                         hint="CU en horas cerradas"
                     />
                     <MetricCard
-                        label="Horas cerradas"
-                        value={formatNumber(summary.closedHours)}
-                        hint={`${formatDuration(summary.scheduledMinutes)} programados`}
-                    />
-                    <MetricCard
-                        label="Tiempo efectivo"
-                        value={formatDuration(summary.effectiveMinutes)}
-                        hint={`${formatDuration(summary.unscheduledMinutes)} no programados`}
-                    />
-                    <MetricCard
-                        label="Tiempo perdido"
-                        value={formatDuration(lostMinutes)}
-                        accent={lossColor('EQ')}
-                        hint="Suma de todas las familias de pérdida"
+                        label="Parihuelas (PH)"
+                        value={formatQuantity(report.parihuelas)}
+                        hint="PH acumulados en horas cerradas"
                     />
                 </div>
             </div>

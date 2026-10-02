@@ -31,6 +31,7 @@ class BuildOeeReport
      * @return array{
      *     summary: array<string, mixed>,
      *     volumen: float,
+     *     parihuelas: float,
      *     byLine: array<int, array<string, mixed>>,
      *     byDay: array<int, array<string, mixed>>,
      *     byWeek: array<int, array<string, mixed>>,
@@ -43,6 +44,7 @@ class BuildOeeReport
         return [
             'summary' => $this->metricsFor($hourSlices)->toArray(),
             'volumen' => $this->outputOf($hourSlices),
+            'parihuelas' => $this->palletsOf($hourSlices),
             'byLine' => $this->groupedByLine($hourSlices),
             'byDay' => $this->groupedByDay($hourSlices),
             'byWeek' => $this->groupedByWeek($hourSlices),
@@ -167,6 +169,18 @@ class BuildOeeReport
                 $slice->bph,
                 $slice->litros,
             ),
+        ), 2);
+    }
+
+    /**
+     * Sum the pallets recorded across a set of hours.
+     *
+     * @param  Collection<int, HourSlice>  $hourSlices
+     */
+    private function palletsOf(Collection $hourSlices): float
+    {
+        return round($hourSlices->sum(
+            fn (HourSlice $slice) => $slice->producido,
         ), 2);
     }
 }

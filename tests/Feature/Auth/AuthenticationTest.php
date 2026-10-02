@@ -4,6 +4,7 @@ use App\Enums\TeamRole;
 use App\Models\Team;
 use App\Models\TeamInvitation;
 use App\Models\User;
+use App\Modules\Oee\Enums\OeeSection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -38,6 +39,22 @@ test('login screen includes team invitation context', function () {
     );
 });
 
+test('plant members are sent to the oee panel after login', function () {
+    $user = User::factory()->create();
+    $plant = Team::factory()->create();
+
+    $plant->members()->attach($user, [
+        'role' => TeamRole::Member->value,
+        'sections' => [OeeSection::Oee->value],
+    ]);
+    $user->switchTeam($plant);
+
+    $this->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ])->assertRedirect(route('oee.dashboard', $plant));
+});
+
 test('users can authenticate using the login screen', function () {
     $user = User::factory()->create();
 
@@ -56,6 +73,21 @@ test('authenticated users visiting login are sent to their team dashboard', func
     $this->actingAs($user)
         ->get(route('login'))
         ->assertRedirect(route('dashboard', $user->personalTeam()));
+});
+
+test('authenticated plant members visiting login are sent to the oee panel', function () {
+    $user = User::factory()->create();
+    $plant = Team::factory()->create();
+
+    $plant->members()->attach($user, [
+        'role' => TeamRole::Member->value,
+        'sections' => [OeeSection::Oee->value],
+    ]);
+    $user->switchTeam($plant);
+
+    $this->actingAs($user)
+        ->get(route('login'))
+        ->assertRedirect(route('oee.dashboard', $plant));
 });
 
 test('inertia login redirects stay on the forwarded https host', function () {

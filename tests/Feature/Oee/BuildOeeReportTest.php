@@ -45,6 +45,7 @@ test('a team with nothing recorded reports zeroes rather than failing', function
 
     expect($report['summary']['oee'])->toBe(0.0)
         ->and($report['volumen'])->toBe(0.0)
+        ->and($report['parihuelas'])->toBe(0.0)
         ->and($report['byLine'])->toBe([])
         ->and($report['byDay'])->toBe([]);
 });
@@ -61,7 +62,8 @@ test('the summary aggregates every closed hour of the team', function () {
     expect($report['summary']['closedHours'])->toBe(2)
         ->and($report['summary']['oee'])->toBe(75.0)
         ->and($report['summary']['em'])->toBe(75.0)
-        ->and($report['volumen'])->toBe(220.0);
+        ->and($report['volumen'])->toBe(220.0)
+        ->and($report['parihuelas'])->toBe(220.0);
 });
 
 test('volume converts closed pallets into consumer units from the sheet', function () {
@@ -76,7 +78,8 @@ test('volume converts closed pallets into consumer units from the sheet', functi
     $report = $this->report->handle($this->team, ProductionFilters::fromArray([]));
 
     // 10 PH × (1000 BPH / 10 PH) × 0.500 L / 30 = 16.67 CU.
-    expect($report['volumen'])->toBe(16.67);
+    expect($report['volumen'])->toBe(16.67)
+        ->and($report['parihuelas'])->toBe(10.0);
 });
 
 test('hours still open are left out of the figures', function () {
@@ -93,7 +96,8 @@ test('hours still open are left out of the figures', function () {
     $report = $this->report->handle($this->team, ProductionFilters::fromArray([]));
 
     expect($report['summary']['closedHours'])->toBe(1)
-        ->and($report['volumen'])->toBe(100.0);
+        ->and($report['volumen'])->toBe(100.0)
+        ->and($report['parihuelas'])->toBe(100.0);
 });
 
 test('another team production never reaches the report', function () {

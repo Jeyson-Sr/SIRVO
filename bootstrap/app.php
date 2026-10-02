@@ -4,6 +4,7 @@ use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SetTeamUrlDefaults;
 use App\Http\Responses\ForbiddenInertiaResponse;
+use App\Modules\Oee\Access\OeeAccess;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -27,6 +28,10 @@ return Application::configure(basePath: dirname(__DIR__))
 
             if ($team === null) {
                 return route('login');
+            }
+
+            if ($user !== null && OeeAccess::viewPanel($user, $team)) {
+                return route('oee.dashboard', $team);
             }
 
             return route('dashboard', $team);
