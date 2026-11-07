@@ -1,1 +1,1 @@
-export { default } from '@/features/oee/pages/dashboard';
+export { default } from '@/features/oee/reporting/pages/dashboard';

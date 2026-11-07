@@ -2,10 +2,10 @@
 
 namespace Database\Factories\Oee;
 
-use App\Models\Team;
-use App\Models\User;
-use App\Modules\Oee\Enums\Shift;
-use App\Modules\Oee\Models\OeeProduction;
+use App\Modules\Identity\User;
+use App\Modules\Oee\Production\OeeProduction;
+use App\Modules\Oee\Production\Shift;
+use App\Modules\Teams\Team;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

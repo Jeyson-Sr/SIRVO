@@ -2,8 +2,8 @@
 
 namespace Database\Seeders\Oee;
 
-use App\Modules\Oee\Models\OeeSku;
-use App\Modules\Oee\Support\SkuRates;
+use App\Modules\Oee\Skus\OeeSku;
+use App\Modules\Oee\Skus\SkuRates;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 

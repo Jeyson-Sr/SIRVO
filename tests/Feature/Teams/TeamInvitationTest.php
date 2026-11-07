@@ -1,10 +1,10 @@
 <?php
 
-use App\Enums\TeamRole;
-use App\Models\Team;
-use App\Models\TeamInvitation;
-use App\Models\User;
-use App\Notifications\Teams\TeamInvitation as TeamInvitationNotification;
+use App\Modules\Identity\User;
+use App\Modules\Teams\Notifications\TeamInvitation as TeamInvitationNotification;
+use App\Modules\Teams\Team;
+use App\Modules\Teams\TeamInvitation;
+use App\Modules\Teams\TeamRole;
 use Illuminate\Support\Facades\Notification;
 
 test('team invitations can be created', function () {

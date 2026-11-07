@@ -1,1 +1,1 @@
-export { default } from '@/features/oee/pages/admin/stop-codes/index';
+export { default } from '@/features/oee/stops/pages/stop-codes/index';

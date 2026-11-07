@@ -1,1 +1,1 @@
-export { default } from '@/features/oee/pages/productions/index';
+export { default } from '@/features/oee/production/pages/index';

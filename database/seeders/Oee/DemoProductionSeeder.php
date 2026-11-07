@@ -2,14 +2,14 @@
 
 namespace Database\Seeders\Oee;
 
-use App\Models\Team;
-use App\Models\User;
-use App\Modules\Oee\Enums\Shift;
-use App\Modules\Oee\Models\CodStop;
-use App\Modules\Oee\Models\OeeHourDetail;
-use App\Modules\Oee\Models\OeeProduction;
-use App\Modules\Oee\Models\OeeSku;
-use App\Modules\Oee\Models\OeeStopDetail;
+use App\Modules\Identity\User;
+use App\Modules\Oee\Production\OeeHourDetail;
+use App\Modules\Oee\Production\OeeProduction;
+use App\Modules\Oee\Production\Shift;
+use App\Modules\Oee\Skus\OeeSku;
+use App\Modules\Oee\Stops\CodStop;
+use App\Modules\Oee\Stops\OeeStopDetail;
+use App\Modules\Teams\Team;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;

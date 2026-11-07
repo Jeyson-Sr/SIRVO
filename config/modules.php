@@ -1,7 +1,7 @@
 <?php
 
-use App\Modules\Oee\Access\OeeAccess;
-use App\Modules\Oee\Enums\OeeSection;
+use App\Modules\Oee\OeeAccess;
+use App\Modules\Oee\OeeSection;
 
 return [
 
@@ -11,7 +11,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Backed enums whose cases are stored on team memberships. Dashboard stays
-    | on App\Enums\AppSection. Adding a module is one class in this list.
+    | on App\Modules\Platform\AppSection. Adding a module is one class in this list.
     |
     */
 

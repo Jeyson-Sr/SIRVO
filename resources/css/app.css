@@ -13,9 +13,12 @@
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
 
-    --radius-lg: var(--radius);
-    --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+    --radius-2xl: calc(var(--radius) + 8px);
+    --radius-3xl: calc(var(--radius) + 16px);
 
     --color-background: var(--background);
     --color-foreground: var(--foreground);
@@ -78,47 +81,80 @@
     --shadow-surface: var(--elevation-surface);
     --shadow-raised: var(--elevation-raised);
     --shadow-tile: var(--elevation-tile);
+
+    /*
+     * Critically damped spring (damping 1.0, response 0.35s) sampled as a
+     * linear() curve. It never overshoots: bounce is reserved for gestures
+     * that carry momentum, and there are none here.
+     */
+    --ease-spring: linear(
+        0,
+        0.064,
+        0.197,
+        0.346,
+        0.485,
+        0.605,
+        0.702,
+        0.778,
+        0.837,
+        0.881,
+        0.914,
+        0.938,
+        0.956,
+        0.969,
+        0.978,
+        0.984,
+        0.989,
+        0.992,
+        0.995,
+        0.996,
+        0.997,
+        0.998,
+        1
+    );
 }
 
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.48 0.105 158);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.96 0.02 158);
-    --accent-foreground: oklch(0.35 0.08 158);
-    --destructive: oklch(0.577 0.245 27.325);
-    --destructive-foreground: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.48 0.105 158);
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.398 0.07 227.392);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.48 0.105 158);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.96 0.02 158);
-    --sidebar-accent-foreground: oklch(0.35 0.08 158);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.48 0.105 158);
+    color-scheme: light;
 
-    --status-ok: oklch(0.58 0.12 158);
-    --status-warning: oklch(0.72 0.15 75);
-    --status-critical: oklch(0.58 0.2 27);
-    --status-pending: oklch(0.7 0.01 250);
+    --background: oklch(0.975 0.012 160);
+    --foreground: oklch(0.2 0.03 162);
+    --card: oklch(1 0.004 160);
+    --card-foreground: oklch(0.2 0.03 162);
+    --popover: oklch(1 0.004 160);
+    --popover-foreground: oklch(0.2 0.03 162);
+    --primary: oklch(0.4 0.09 160);
+    --primary-foreground: oklch(0.985 0.01 160);
+    --secondary: oklch(0.945 0.02 160);
+    --secondary-foreground: oklch(0.28 0.05 160);
+    --muted: oklch(0.955 0.015 160);
+    --muted-foreground: oklch(0.46 0.03 160);
+    --accent: oklch(0.94 0.03 160);
+    --accent-foreground: oklch(0.3 0.07 160);
+    --destructive: oklch(0.55 0.22 27);
+    --destructive-foreground: oklch(0.5 0.2 27);
+    --border: oklch(0.25 0.04 160 / 0.12);
+    --input: oklch(0.25 0.04 160 / 0.16);
+    --ring: oklch(0.5 0.11 158);
+    --chart-1: oklch(0.4 0.09 160);
+    --chart-2: oklch(0.55 0.11 175);
+    --chart-3: oklch(0.65 0.12 150);
+    --chart-4: oklch(0.72 0.13 128);
+    --chart-5: oklch(0.5 0.08 200);
+    --radius: 1rem;
+    --sidebar: oklch(0.97 0.015 160 / 0.6);
+    --sidebar-foreground: oklch(0.2 0.03 162);
+    --sidebar-primary: oklch(0.4 0.09 160);
+    --sidebar-primary-foreground: oklch(0.985 0.01 160);
+    --sidebar-accent: oklch(0.4 0.09 160 / 0.12);
+    --sidebar-accent-foreground: oklch(0.3 0.08 160);
+    --sidebar-border: oklch(0.25 0.04 160 / 0.1);
+    --sidebar-ring: oklch(0.5 0.11 158);
+
+    --status-ok: oklch(0.5 0.13 152);
+    --status-warning: oklch(0.58 0.14 70);
+    --status-critical: oklch(0.55 0.2 27);
+    --status-pending: oklch(0.62 0.02 160);
 
     --loss-eq: oklch(0.58 0.2 27);
     --loss-opd: oklch(0.66 0.16 55);
@@ -129,51 +165,80 @@
     --loss-tnp: oklch(0.68 0.01 250);
 
     --elevation-surface:
-        0 1px 2px oklch(0.145 0 0 / 0.04), 0 12px 32px oklch(0.145 0 0 / 0.07);
+        inset 0 1px 0 oklch(1 0 0 / 0.7), 0 1px 2px oklch(0.25 0.06 160 / 0.06),
+        0 12px 32px oklch(0.25 0.06 160 / 0.08);
     --elevation-raised:
-        0 1px 2px oklch(0.145 0 0 / 0.05), 0 8px 20px oklch(0.145 0 0 / 0.08);
+        inset 0 1px 0 oklch(1 0 0 / 0.7), 0 1px 2px oklch(0.25 0.06 160 / 0.08),
+        0 10px 24px oklch(0.25 0.06 160 / 0.12);
     --elevation-tile:
-        0 1px 1px oklch(0.145 0 0 / 0.04), 0 2px 8px oklch(0.145 0 0 / 0.05);
+        inset 0 1px 0 oklch(1 0 0 / 0.6), 0 1px 1px oklch(0.25 0.06 160 / 0.05),
+        0 2px 8px oklch(0.25 0.06 160 / 0.07);
+
+    /* Liquid glass: tint, rim light and sheen for translucent chrome. */
+    --glass-tint: oklch(0.99 0.01 160);
+    --glass-edge: oklch(0.25 0.04 160 / 0.1);
+    --glass-highlight: oklch(1 0 0 / 0.85);
+    --glass-sheen: oklch(1 0 0 / 0.55);
+    --glass-shadow: 0 24px 60px oklch(0.25 0.06 160 / 0.18);
+    --glass-a-bar: 66%;
+    --glass-a-panel: 78%;
+    --glass-blur: 24px;
+    --glass-sat: 1.8;
+
+    /* A backdrop for the glass to sit over. */
+    --aurora:
+        radial-gradient(
+            60rem 38rem at 6% -10%,
+            oklch(0.9 0.07 158 / 0.65),
+            transparent 70%
+        ),
+        radial-gradient(
+            48rem 34rem at 100% 0%,
+            oklch(0.92 0.05 185 / 0.55),
+            transparent 70%
+        );
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.145 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.145 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.72 0.13 158);
-    --primary-foreground: oklch(0.18 0.03 158);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.3 0.035 158);
-    --accent-foreground: oklch(0.9 0.05 158);
-    --destructive: oklch(0.396 0.141 25.723);
-    --destructive-foreground: oklch(0.637 0.237 25.331);
-    --border: oklch(0.269 0 0);
-    --input: oklch(0.269 0 0);
-    --ring: oklch(0.72 0.13 158);
-    --chart-1: oklch(0.488 0.243 264.376);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.72 0.13 158);
-    --sidebar-primary-foreground: oklch(0.18 0.03 158);
-    --sidebar-accent: oklch(0.3 0.035 158);
-    --sidebar-accent-foreground: oklch(0.9 0.05 158);
-    --sidebar-border: oklch(0.269 0 0);
-    --sidebar-ring: oklch(0.72 0.13 158);
+    color-scheme: dark;
 
-    --status-ok: oklch(0.72 0.13 158);
-    --status-warning: oklch(0.79 0.15 78);
-    --status-critical: oklch(0.68 0.19 25);
-    --status-pending: oklch(0.6 0.01 250);
+    --background: oklch(0.15 0.026 165);
+    --foreground: oklch(0.96 0.012 160);
+    --card: oklch(0.2 0.03 163);
+    --card-foreground: oklch(0.96 0.012 160);
+    --popover: oklch(0.21 0.032 163);
+    --popover-foreground: oklch(0.96 0.012 160);
+    --primary: oklch(0.76 0.15 158);
+    --primary-foreground: oklch(0.17 0.04 160);
+    --secondary: oklch(0.26 0.035 162);
+    --secondary-foreground: oklch(0.96 0.012 160);
+    --muted: oklch(0.24 0.03 163);
+    --muted-foreground: oklch(0.74 0.025 160);
+    --accent: oklch(0.3 0.05 160);
+    --accent-foreground: oklch(0.93 0.05 158);
+    --destructive: oklch(0.58 0.2 25);
+    --destructive-foreground: oklch(0.72 0.17 25);
+    --border: oklch(1 0 0 / 0.09);
+    --input: oklch(1 0 0 / 0.12);
+    --ring: oklch(0.76 0.15 158);
+    --chart-1: oklch(0.76 0.15 158);
+    --chart-2: oklch(0.72 0.12 185);
+    --chart-3: oklch(0.82 0.14 130);
+    --chart-4: oklch(0.66 0.1 200);
+    --chart-5: oklch(0.86 0.12 105);
+    --sidebar: oklch(0.18 0.03 163 / 0.55);
+    --sidebar-foreground: oklch(0.96 0.012 160);
+    --sidebar-primary: oklch(0.76 0.15 158);
+    --sidebar-primary-foreground: oklch(0.17 0.04 160);
+    --sidebar-accent: oklch(0.76 0.15 158 / 0.16);
+    --sidebar-accent-foreground: oklch(0.92 0.08 158);
+    --sidebar-border: oklch(1 0 0 / 0.08);
+    --sidebar-ring: oklch(0.76 0.15 158);
+
+    --status-ok: oklch(0.74 0.15 150);
+    --status-warning: oklch(0.82 0.15 85);
+    --status-critical: oklch(0.7 0.19 25);
+    --status-pending: oklch(0.62 0.02 160);
 
     --loss-eq: oklch(0.68 0.19 25);
     --loss-opd: oklch(0.74 0.15 58);
@@ -184,11 +249,80 @@
     --loss-tnp: oklch(0.6 0.01 250);
 
     --elevation-surface:
-        0 1px 0 oklch(1 0 0 / 0.04), 0 16px 36px oklch(0 0 0 / 0.42);
+        inset 0 1px 0 oklch(1 0 0 / 0.07), 0 1px 2px oklch(0 0 0 / 0.3),
+        0 18px 40px oklch(0.05 0.03 165 / 0.45);
     --elevation-raised:
-        0 1px 0 oklch(1 0 0 / 0.05), 0 10px 24px oklch(0 0 0 / 0.38);
+        inset 0 1px 0 oklch(1 0 0 / 0.08), 0 1px 2px oklch(0 0 0 / 0.3),
+        0 12px 28px oklch(0.05 0.03 165 / 0.4);
     --elevation-tile:
-        0 1px 0 oklch(1 0 0 / 0.04), 0 2px 10px oklch(0 0 0 / 0.28);
+        inset 0 1px 0 oklch(1 0 0 / 0.06), 0 1px 1px oklch(0 0 0 / 0.25),
+        0 4px 14px oklch(0.05 0.03 165 / 0.3);
+
+    --glass-tint: oklch(0.2 0.035 163);
+    --glass-edge: oklch(1 0 0 / 0.1);
+    --glass-highlight: oklch(1 0 0 / 0.16);
+    --glass-sheen: oklch(1 0 0 / 0.07);
+    --glass-shadow: 0 28px 70px oklch(0.03 0.03 165 / 0.6);
+
+    --aurora:
+        radial-gradient(
+            60rem 38rem at 6% -10%,
+            oklch(0.34 0.09 160 / 0.6),
+            transparent 70%
+        ),
+        radial-gradient(
+            48rem 34rem at 100% 0%,
+            oklch(0.3 0.07 188 / 0.42),
+            transparent 70%
+        ),
+        radial-gradient(
+            52rem 36rem at 50% 120%,
+            oklch(0.26 0.06 155 / 0.4),
+            transparent 70%
+        );
+}
+
+/* Phones: a lighter blur keeps scrolling smooth on modest hardware. */
+@media (width < 48rem) {
+    :root {
+        --glass-blur: 16px;
+    }
+}
+
+/*
+ * Glass degrades to an opaque surface when the user asks for less
+ * transparency or more contrast, or when the browser cannot blur.
+ */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    :root {
+        --glass-a-bar: 100%;
+        --glass-a-panel: 100%;
+        --glass-blur: 0px;
+        --glass-sat: 1;
+    }
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+    :root {
+        --glass-a-bar: 100%;
+        --glass-a-panel: 100%;
+        --glass-blur: 0px;
+        --glass-sat: 1;
+    }
+}
+
+html {
+    background-color: var(--background);
+}
+
+/* The aurora is fixed behind everything; it never scrolls with the page. */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image: var(--aurora);
+    pointer-events: none;
 }
 
 @layer base {
@@ -198,5 +332,337 @@
 
     body {
         @apply bg-background text-foreground;
+    }
+}
+
+/*
+ * Typography: tracking and leading follow the size. Large text is tightened,
+ * body text stays near zero, and small caps-style labels open up.
+ */
+@utility text-display {
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+}
+
+@utility text-title {
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+@utility text-caption {
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+}
+
+/*
+ * Liquid glass. Translucent chrome that lets the aurora and scrolling
+ * content show through, with a rim of light and a soft sheen on top.
+ * Real refraction (an SVG displacement filter on backdrop-filter) only
+ * works in Chromium, so the depth comes from blur, saturation, the
+ * highlight edge and the sheen instead. Opacity and blur come from tokens,
+ * so reduced-transparency, high contrast and missing backdrop-filter
+ * support all fall back to a solid surface in one place (see :root).
+ *
+ * `material` pins to a top edge, `material-top` to a bottom edge, and
+ * `glass-panel` is for floating surfaces (dialogs, menus, auth card).
+ */
+@utility material {
+    background-color: color-mix(
+        in oklab,
+        var(--glass-tint) var(--glass-a-bar),
+        transparent
+    );
+    background-image: linear-gradient(
+        180deg,
+        var(--glass-sheen),
+        transparent 70%
+    );
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    border-bottom: 1px solid var(--glass-edge);
+    box-shadow: inset 0 1px 0 var(--glass-highlight);
+}
+
+@utility material-top {
+    background-color: color-mix(
+        in oklab,
+        var(--glass-tint) var(--glass-a-bar),
+        transparent
+    );
+    background-image: linear-gradient(
+        0deg,
+        var(--glass-sheen),
+        transparent 70%
+    );
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    border-top: 1px solid var(--glass-edge);
+    box-shadow: inset 0 1px 0 var(--glass-highlight);
+}
+
+@utility glass-panel {
+    background-color: color-mix(
+        in oklab,
+        var(--glass-tint) var(--glass-a-panel),
+        transparent
+    );
+    background-image: linear-gradient(
+        145deg,
+        var(--glass-sheen),
+        transparent 45%
+    );
+    -webkit-backdrop-filter: blur(calc(var(--glass-blur) + 4px))
+        saturate(var(--glass-sat));
+    backdrop-filter: blur(calc(var(--glass-blur) + 4px))
+        saturate(var(--glass-sat));
+    border: 1px solid var(--glass-edge);
+    box-shadow:
+        inset 0 1px 0 var(--glass-highlight),
+        var(--glass-shadow);
+}
+
+/*
+ * Interactive surfaces rise a little under the pointer. Hover only exists
+ * on devices that have it, and reduced motion keeps the colour change but
+ * drops the movement.
+ */
+@utility lift {
+    transition:
+        translate 300ms var(--ease-spring),
+        box-shadow 300ms var(--ease-spring),
+        border-color 200ms ease;
+
+    @media (hover: hover) {
+        &:hover,
+        &:focus-within {
+            translate: 0 -2px;
+            box-shadow: var(--shadow-raised);
+            border-color: color-mix(
+                in oklab,
+                var(--primary) 35%,
+                var(--border)
+            );
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: border-color 200ms ease;
+
+        &:hover,
+        &:focus-within {
+            translate: 0 0;
+        }
+    }
+}
+
+/* Loading placeholder: a soft green sweep instead of a grey pulse. */
+@keyframes shimmer {
+    from {
+        background-position: 200% 0;
+    }
+
+    to {
+        background-position: -200% 0;
+    }
+}
+
+@utility shimmer {
+    background-color: var(--muted);
+    background-image: linear-gradient(
+        90deg,
+        transparent 30%,
+        color-mix(in oklab, var(--primary) 14%, transparent) 50%,
+        transparent 70%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.8s linear infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+/*
+ * Device adaptation. Mobile-first: the base styles are the phone layout and
+ * larger screens opt in with sm:/md:/lg:. Input type is handled separately
+ * from width, so a tablet with a finger and a laptop with a mouse each get
+ * the right target size.
+ */
+@layer base {
+    /* Fingers need roughly 44px targets; a mouse keeps the compact sizes. */
+    @media (pointer: coarse) {
+        :where(
+            [data-slot='button'],
+            [data-slot='input'],
+            [data-slot='select-trigger'],
+            [data-slot='native-select'],
+            [data-sidebar='menu-button']
+        ) {
+            min-height: 2.75rem;
+        }
+
+        :where([data-slot='button']) {
+            min-width: 2.75rem;
+        }
+
+        :where(
+            [data-slot='dropdown-menu-item'],
+            [data-slot='select-item'],
+            [data-slot='dropdown-menu-checkbox-item']
+        ) {
+            min-height: 2.5rem;
+        }
+    }
+
+    /* Anchored content clears the sticky header instead of hiding under it. */
+    :root {
+        scroll-padding-top: 4.5rem;
+    }
+}
+
+/*
+ * Tables become a stack of cards on phones: the header row is hidden, every
+ * cell shows its own label (data-label), and from md up it is a plain table.
+ * Cells without data-label (actions, for instance) span the card.
+ */
+@utility table-stack {
+    @media (width < 48rem) {
+        display: block;
+        min-width: 0;
+
+        & thead {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip-path: inset(50%);
+        }
+
+        & tbody {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        & tr {
+            display: grid;
+            gap: 0.375rem;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            background-color: var(--card);
+        }
+
+        & td {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            min-width: 0;
+            max-width: none;
+            width: auto;
+            padding: 0;
+            border: 0;
+            text-align: right;
+        }
+
+        & td[data-label]::before {
+            content: attr(data-label);
+            flex-shrink: 0;
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
+            text-align: left;
+        }
+
+        & td:not([data-label]) {
+            justify-content: stretch;
+        }
+
+        & td > [data-slot='input'],
+        & td > [data-slot='native-select'] {
+            flex: 1;
+            max-width: 14rem;
+        }
+    }
+}
+
+/*
+ * Pointer-down feedback. It is a transition on `scale`, so releasing (or
+ * pressing again) mid-motion continues from the live value instead of
+ * jumping. Reduced motion swaps the movement for a dim.
+ */
+@utility press {
+    --tw-ease: var(--ease-spring);
+    --tw-duration: 300ms;
+    transition-timing-function: var(--ease-spring);
+    transition-duration: 300ms;
+
+    &:active:not(:disabled) {
+        scale: 0.97;
+        transition-duration: 120ms;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &:active:not(:disabled) {
+            scale: 1;
+            opacity: 0.8;
+        }
+    }
+}
+
+@keyframes rise-in {
+    from {
+        opacity: 0;
+        translate: 0 10px;
+    }
+
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/*
+ * Entrance for sections that arrive after the page (deferred props). Set
+ * `--i` inline to stagger siblings. `backwards` fill avoids leaving a
+ * transform behind once the animation ends.
+ */
+@utility rise-in {
+    animation: rise-in 500ms var(--ease-spring) backwards;
+    animation-delay: calc(var(--i, 0) * 60ms);
+
+    @media (prefers-reduced-motion: reduce) {
+        animation-name: fade-in;
+        animation-delay: 0ms;
+    }
+}
+
+@keyframes gauge-sweep {
+    from {
+        stroke-dashoffset: 100;
+    }
+
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Draws an arc whose path declares pathLength="100". */
+@utility gauge-sweep {
+    stroke-dasharray: 100;
+    animation: gauge-sweep 900ms var(--ease-spring) backwards;
+
+    @media (prefers-reduced-motion: reduce) {
+        stroke-dasharray: none;
+        animation-name: fade-in;
     }
 }

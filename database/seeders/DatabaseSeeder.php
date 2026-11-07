@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Enums\AppSection;
-use App\Enums\TeamRole;
-use App\Models\Team;
-use App\Models\User;
+use App\Modules\Identity\User;
+use App\Modules\Platform\AppSection;
+use App\Modules\Teams\Team;
+use App\Modules\Teams\TeamRole;
 use Database\Seeders\Oee\CodStopSeeder;
 use Database\Seeders\Oee\DemoProductionSeeder;
 use Database\Seeders\Oee\SkuSeeder;

@@ -1,1 +1,1 @@
-export { default } from '@/features/oee/pages/admin/skus/edit';
+export { default } from '@/features/oee/skus/pages/edit';

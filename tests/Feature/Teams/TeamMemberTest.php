@@ -1,8 +1,8 @@
 <?php
 
-use App\Enums\TeamRole;
-use App\Models\Team;
-use App\Models\User;
+use App\Modules\Identity\User;
+use App\Modules\Teams\Team;
+use App\Modules\Teams\TeamRole;
 
 test('team member roles can be updated by owners', function () {
     $owner = User::factory()->create();

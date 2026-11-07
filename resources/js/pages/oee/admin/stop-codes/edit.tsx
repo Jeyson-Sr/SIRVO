@@ -1,1 +1,1 @@
-export { default } from '@/features/oee/pages/admin/stop-codes/edit';
+export { default } from '@/features/oee/stops/pages/stop-codes/edit';

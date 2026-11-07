@@ -1,1 +1,1 @@
-export { default } from '@/features/oee/pages/productions/create';
+export { default } from '@/features/oee/production/pages/create';

@@ -2,10 +2,10 @@
 
 namespace Database\Factories\Oee;
 
-use App\Modules\Oee\Enums\StopType;
-use App\Modules\Oee\Models\CodStop;
-use App\Modules\Oee\Models\OeeHourDetail;
-use App\Modules\Oee\Models\OeeStopDetail;
+use App\Modules\Oee\Production\OeeHourDetail;
+use App\Modules\Oee\Stops\CodStop;
+use App\Modules\Oee\Stops\OeeStopDetail;
+use App\Modules\Oee\Stops\StopType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\AppSection;
+use App\Modules\Platform\AppSection;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;

@@ -2,8 +2,8 @@
 
 namespace Database\Factories\Oee;
 
-use App\Modules\Oee\Models\OeeSku;
-use App\Modules\Oee\Models\OeeSkuBphChange;
+use App\Modules\Oee\Skus\OeeSku;
+use App\Modules\Oee\Skus\OeeSkuBphChange;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

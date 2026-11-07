@@ -1,0 +1,180 @@
+<?php
+
+use App\Modules\Identity\User;
+use App\Modules\Oee\OeeSection;
+use App\Modules\Teams\Team;
+use App\Modules\Teams\TeamInvitation;
+use App\Modules\Teams\TeamRole;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
+use Inertia\Testing\AssertableInertia as Assert;
+use Laravel\Fortify\Features;
+use Laravel\Passkeys\Contracts\PasskeyLoginResponse;
+
+test('login screen can be rendered', function () {
+    $response = $this->get(route('login'));
+
+    $response->assertOk();
+    $response->assertInertia(fn (Assert $page) => $page->component('auth/login'));
+});
+
+test('login screen includes team invitation context', function () {
+    $owner = User::factory()->create();
+    $team = Team::factory()->create(['name' => 'Laravel Team']);
+    $team->members()->attach($owner, ['role' => TeamRole::Owner->value]);
+
+    $invitation = TeamInvitation::factory()->create([
+        'team_id' => $team->id,
+        'email' => 'invited@example.com',
+        'invited_by' => $owner->id,
+    ]);
+
+    $response = $this->get(route('login', ['invitation' => $invitation->code]));
+
+    $response->assertOk();
+    $response->assertInertia(fn (Assert $page) => $page
+        ->component('auth/login')
+        ->where('teamInvitation.code', $invitation->code)
+        ->where('teamInvitation.teamName', 'Laravel Team'),
+    );
+});
+
+test('plant members are sent to the oee panel after login', function () {
+    $user = User::factory()->create();
+    $plant = Team::factory()->create();
+
+    $plant->members()->attach($user, [
+        'role' => TeamRole::Member->value,
+        'sections' => [OeeSection::Oee->value],
+    ]);
+    $user->switchTeam($plant);
+
+    $this->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ])->assertRedirect(route('oee.dashboard', $plant));
+});
+
+test('users can authenticate using the login screen', function () {
+    $user = User::factory()->create();
+
+    $response = $this->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect(route('dashboard'));
+});
+
+test('authenticated users visiting login are sent to their team dashboard', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('login'))
+        ->assertRedirect(route('dashboard', $user->personalTeam()));
+});
+
+test('authenticated plant members visiting login are sent to the oee panel', function () {
+    $user = User::factory()->create();
+    $plant = Team::factory()->create();
+
+    $plant->members()->attach($user, [
+        'role' => TeamRole::Member->value,
+        'sections' => [OeeSection::Oee->value],
+    ]);
+    $user->switchTeam($plant);
+
+    $this->actingAs($user)
+        ->get(route('login'))
+        ->assertRedirect(route('oee.dashboard', $plant));
+});
+
+test('inertia login redirects stay on the forwarded https host', function () {
+    $user = User::factory()->create();
+
+    $response = $this
+        ->withHeaders([
+            'X-Forwarded-Proto' => 'https',
+            'X-Forwarded-Host' => 'sirvo.test',
+            'X-Inertia' => 'true',
+            'Accept' => 'text/html, application/xhtml+xml',
+        ])
+        ->post(route('login.store'), [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect();
+    expect($response->headers->get('Location'))->toStartWith('https://sirvo.test/');
+});
+
+test('passkey login response redirects to the current team dashboard', function () {
+    $user = User::factory()->create();
+
+    $request = Request::create(route('login', absolute: false), 'GET', server: [
+        'HTTP_ACCEPT' => 'application/json',
+    ]);
+    $request->setLaravelSession($this->app['session.store']);
+    $request->setUserResolver(fn () => $user);
+
+    $jsonResponse = app(PasskeyLoginResponse::class)->toResponse($request);
+
+    expect($jsonResponse->getData()->redirect)->toBe(route('dashboard', ['current_team' => $user->personalTeam()->slug]));
+});
+
+test('users with two factor enabled are redirected to two factor challenge', function () {
+    if (! Features::canManageTwoFactorAuthentication()) {
+        $this->markTestSkipped('Two-factor authentication is not enabled.');
+    }
+
+    Features::twoFactorAuthentication([
+        'confirm' => true,
+        'confirmPassword' => true,
+    ]);
+
+    $user = User::factory()->withTwoFactor()->create();
+
+    $response = $this->post(route('login'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $response->assertRedirect(route('two-factor.login'));
+    $response->assertSessionHas('login.id', $user->id);
+    $this->assertGuest();
+});
+
+test('users can not authenticate with invalid password', function () {
+    $user = User::factory()->create();
+
+    $this->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'wrong-password',
+    ]);
+
+    $this->assertGuest();
+});
+
+test('users can logout', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)->post(route('logout'));
+
+    $this->assertGuest();
+    $response->assertRedirect(route('home'));
+});
+
+test('users are rate limited', function () {
+    $user = User::factory()->create();
+
+    RateLimiter::increment(md5('login'.implode('|', [$user->email, '127.0.0.1'])), amount: 5);
+
+    $response = $this->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'wrong-password',
+    ]);
+
+    $response->assertTooManyRequests();
+});

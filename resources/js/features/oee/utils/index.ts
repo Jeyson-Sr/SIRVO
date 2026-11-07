@@ -9,6 +9,7 @@ export {
     lossColor,
     lossLabel,
     oeeColor,
+    oeeStatus,
     statusColor,
 } from './format';
 export {
@@ -27,11 +28,7 @@ export {
     STATUS_LABELS,
     statusOf,
 } from './hour-balance';
-export {
-    parseSkuNumber,
-    skuPaqPallet,
-    skuPalletsPerHour,
-} from './sku-rates';
+export { parseSkuNumber, skuPaqPallet, skuPalletsPerHour } from './sku-rates';
 export { midpointClock, palletTarget, splitHourAt } from './split-hour';
 export type { HourSplit } from './split-hour';
 export { newClientUuid } from './client-uuid';

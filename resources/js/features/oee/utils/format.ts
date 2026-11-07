@@ -61,13 +61,26 @@ export function statusColor(status: HourStatusValue): string {
  * needing intervention rather than merely watching.
  */
 export function oeeColor(percentage: number): string {
+    return oeeStatus(percentage).color;
+}
+
+export type OeeStatus = {
+    label: string;
+    color: string;
+};
+
+/**
+ * Name and colour the band an OEE figure falls in: at or above the 85%
+ * target, between 70% and 85%, or below 70%.
+ */
+export function oeeStatus(percentage: number): OeeStatus {
     if (percentage >= 85) {
-        return 'var(--status-ok)';
+        return { label: 'Óptimo', color: 'var(--status-ok)' };
     }
 
     return percentage >= 70
-        ? 'var(--status-warning)'
-        : 'var(--status-critical)';
+        ? { label: 'Atención', color: 'var(--status-warning)' }
+        : { label: 'Crítico', color: 'var(--status-critical)' };
 }
 
 const decimalFormatter = new Intl.NumberFormat('es-PE', {

@@ -1,11 +1,11 @@
 <?php
 
-use App\Enums\AppSection;
-use App\Enums\TeamRole;
-use App\Models\Team;
-use App\Models\User;
-use App\Modules\Oee\Enums\OeeSection;
-use App\Modules\Oee\Models\OeeProduction;
+use App\Modules\Identity\User;
+use App\Modules\Oee\OeeSection;
+use App\Modules\Oee\Production\OeeProduction;
+use App\Modules\Platform\AppSection;
+use App\Modules\Teams\Team;
+use App\Modules\Teams\TeamRole;
 use Inertia\Testing\AssertableInertia;
 
 beforeEach(function () {

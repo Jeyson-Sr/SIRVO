@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Enums\AppSection;
-use App\Enums\TeamRole;
-use App\Models\Team;
-use App\Models\User;
+use App\Modules\Identity\User;
+use App\Modules\Platform\AppSection;
+use App\Modules\Teams\Team;
+use App\Modules\Teams\TeamRole;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -15,6 +15,8 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
+    protected $model = User::class;
+
     /**
      * The current password being used by the factory.
      */

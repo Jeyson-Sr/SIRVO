@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Middleware\HandleAppearance;
-use App\Http\Middleware\HandleInertiaRequests;
-use App\Http\Middleware\SetTeamUrlDefaults;
-use App\Http\Responses\ForbiddenInertiaResponse;
-use App\Modules\Oee\Access\OeeAccess;
+use App\Modules\Oee\OeeAccess;
+use App\Modules\Oee\RefreshSqlDataCommand;
+use App\Modules\Platform\ForbiddenInertiaResponse;
+use App\Modules\Platform\HandleAppearance;
+use App\Modules\Platform\HandleInertiaRequests;
+use App\Modules\Teams\SetTeamUrlDefaults;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -18,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    ->withCommands([RefreshSqlDataCommand::class])
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->trustProxies(at: '*');
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);

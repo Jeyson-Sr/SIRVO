@@ -1,9 +1,9 @@
 <?php
 
-use App\Enums\TeamRole;
-use App\Models\Team;
-use App\Models\User;
-use App\Modules\Oee\Enums\OeeSection;
+use App\Modules\Identity\User;
+use App\Modules\Oee\OeeSection;
+use App\Modules\Teams\Team;
+use App\Modules\Teams\TeamRole;
 
 test('guests are redirected to the login screen', function () {
     $this->get(route('home'))->assertRedirect(route('login'));

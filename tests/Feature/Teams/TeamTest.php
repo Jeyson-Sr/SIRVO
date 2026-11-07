@@ -1,8 +1,8 @@
 <?php
 
-use App\Enums\TeamRole;
-use App\Models\Team;
-use App\Models\User;
+use App\Modules\Identity\User;
+use App\Modules\Teams\Team;
+use App\Modules\Teams\TeamRole;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('the teams index page can be rendered', function () {

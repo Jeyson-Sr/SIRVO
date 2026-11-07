@@ -1,4 +1,10 @@
-import { ClipboardList, Gauge, MessageSquareText, Package, Tags } from 'lucide-react';
+import {
+    ClipboardList,
+    Gauge,
+    MessageSquareText,
+    Package,
+    Tags,
+} from 'lucide-react';
 import { dashboard as oeeDashboard, paradas } from '@/routes/oee';
 import { index as skusIndex } from '@/routes/oee/admin/skus';
 import { index as stopCodesIndex } from '@/routes/oee/admin/stop-codes';

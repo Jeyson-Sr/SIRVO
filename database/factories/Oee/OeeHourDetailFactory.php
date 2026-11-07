@@ -2,8 +2,8 @@
 
 namespace Database\Factories\Oee;
 
-use App\Modules\Oee\Models\OeeHourDetail;
-use App\Modules\Oee\Models\OeeProduction;
+use App\Modules\Oee\Production\OeeHourDetail;
+use App\Modules\Oee\Production\OeeProduction;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

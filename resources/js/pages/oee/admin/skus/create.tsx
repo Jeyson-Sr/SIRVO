@@ -1,1 +1,1 @@
-export { default } from '@/features/oee/pages/admin/skus/create';
+export { default } from '@/features/oee/skus/pages/create';

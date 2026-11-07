@@ -43,6 +43,12 @@ export type DailyPoint = {
     volumen: number;
 };
 
+export type DailyVolumePoint = {
+    fecha: string;
+    label: string;
+    volumen: number;
+};
+
 export type WeeklyPoint = {
     semana: string;
     label: string;
@@ -59,6 +65,7 @@ export type OeeReport = {
     byLine: LinePerformance[];
     byDay: DailyPoint[];
     byWeek: WeeklyPoint[];
+    volumenPorDia: DailyVolumePoint[];
 };
 
 export type RankedStop = {

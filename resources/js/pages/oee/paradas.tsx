@@ -1,1 +1,1 @@
-export { default } from '@/features/oee/pages/paradas';
+export { default } from '@/features/oee/stops/pages/paradas';

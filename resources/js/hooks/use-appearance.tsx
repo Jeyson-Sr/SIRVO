@@ -9,7 +9,7 @@ export type UseAppearanceReturn = {
     readonly updateAppearance: (mode: Appearance) => void;
 };
 
-const DEFAULT_APPEARANCE: Appearance = 'light';
+const DEFAULT_APPEARANCE: Appearance = 'dark';
 
 const listeners = new Set<() => void>();
 let currentAppearance: Appearance = DEFAULT_APPEARANCE;

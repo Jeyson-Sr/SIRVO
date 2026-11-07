@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\Oee\Enums\OeeSection;
+use App\Modules\Oee\OeeSection;
 
 test('oee sections keep the stored membership values and spanish labels', function () {
     expect(OeeSection::Oee->value)->toBe('oee')

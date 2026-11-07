@@ -2,8 +2,8 @@
 
 namespace Database\Factories\Oee;
 
-use App\Modules\Oee\Enums\StopType;
-use App\Modules\Oee\Models\CodStop;
+use App\Modules\Oee\Stops\CodStop;
+use App\Modules\Oee\Stops\StopType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
